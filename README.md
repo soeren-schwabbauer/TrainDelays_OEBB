@@ -1,1 +1,3 @@
-# verspaetung_obb
+# TrainDelays_OEBB
+
+Scrape & Analyse the TrainDelays of OEBB
