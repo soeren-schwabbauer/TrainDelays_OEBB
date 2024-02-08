@@ -11,7 +11,6 @@ library(rvest)
 library(dplyr)
 library(xml2)
 library(magrittr)
-library(tidyr)
 
 
 # load information on cities ---------------------------------------------------
