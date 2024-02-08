@@ -11,6 +11,7 @@ library(rvest)
 library(dplyr)
 library(xml2)
 library(magrittr)
+library(tidyr)
 
 
 # load information on cities ---------------------------------------------------
@@ -19,7 +20,7 @@ stations <- at_stations %>% pull(Bahnhof)
 
 
 # scrape yesterdays departures into list ---------------------------------------
-departuretimes_list <- list()
+delaytimes_list <- list()
 
 for(station in stations){
   
@@ -27,23 +28,20 @@ for(station in stations){
     wp <- paste0("https://www.zugfinder.net/de/bahnhofstafel-", station)
     
     #stationsinfo <- read_html(wp) %>% html_node('#hero') 
-    departures <- read_html(wp) %>% html_node('#zugdaten') %>% html_table
+    delays <- read_html(wp) %>% html_node('#zugdaten') %>% html_table
   
     # add date & station
-    departures %<>% mutate(date = Sys.Date()-1,
-                           stadt = station)
+    delays %<>% mutate(Datum = Sys.Date()-1)
     
-    departuretimes_list[[station]] <- departures
+    delaytimes_list[[station]] <- delays
     }, error = function(e) {
     cat("Error occurred for station:", station, "\n")
   })
 }
 
-
 # save data --------------------------------------------------------------------
 formatted_date <- format(Sys.Date() - 1, "%Y-%m-%d")
-departuretimes_df <- bind_rows(departuretimes)
 
-assign(paste0("departures_", formatted_date), departuretimes_df) %>%
+assign(paste0("departures_", formatted_date), delaytimes_list) %>%
   
-  save(file = paste0(getwd(), "/DATA/departures_", formatted_date, ".rda"))
+  saveRDS(file = paste0(getwd(), "/DATA/raw_delays_", formatted_date, ".RData"))
