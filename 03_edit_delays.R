@@ -6,6 +6,11 @@
 # Purpose: Edit Raw delay data
 ################################################################################
 
+# load libraries
+library(magrittr)
+library(dplyr)
+library(tidyr)
+
 raw_delays_list <- readRDS(paste0(getwd(), "/DATA/raw_delays_2024-02-07.RData"))
 
 
@@ -34,7 +39,7 @@ edit_delaytimes_list <- function(delay){
     # get hour interval
     mutate(time_hh = gsub(":.*", "", time))
   
-  return(station)
+  return(delay)
 }
 
 
