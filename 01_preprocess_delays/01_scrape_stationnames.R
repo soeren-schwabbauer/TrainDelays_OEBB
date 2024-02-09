@@ -11,6 +11,9 @@ library(rvest)
 library(magrittr)
 library(dplyr)
 
+# define INPUT, OUTPUT, TEMP
+OUTPUT <- "G:/My Drive/R_data/TrainDelays_OEBB/01_preprocess_delays/INPUT/"
+
 
 # scrape data ------------------------------------------------------------------
 table_nodes <- seq(4,20, by = 2) %>% as.character()
@@ -37,9 +40,11 @@ at_stations %<>% mutate(Bahnhof = gsub(" ", "_", Bahnhof),
   
   mutate(Bahnhof = case_when(Bahnhof == "Wien_Westbf" ~ "Wien_West",
                              Bahnhof == "Flughafen_Wien_(VIE)" ~ "Flughafen_wien",
+                             Bahnhof == "Baden" ~ "Baden_B.wien",
+                             Bahnhof == "Langen" ~ "Langen_am_Arlberg",
                              .default = Bahnhof))
 
 
 # save file --------------------------------------------------------------------
-save(at_stations, file = paste0(getwd(), "/DATA/at_stations.rda"))
+save(at_stations, file = paste0(OUTPUT, "at_stations.rda"))
 
