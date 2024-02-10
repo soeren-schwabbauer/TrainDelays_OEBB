@@ -24,7 +24,7 @@ stations <- at_stations %>% pull(Bahnhof)
 # scrape yesterdays departures into list ---------------------------------------
 date <- Sys.Date()-1
 delaytimes_list <- list()
-error_stations <- c()
+error_stations <- list()
 
 for(station in stations){
   
@@ -40,8 +40,8 @@ for(station in stations){
     delaytimes_list[[station]] <- delays
     }, error = function(e) {
     cat("Error occurred for station:", station, "\n")
-      error_stations <- c(error_stations, station)
-  })
+      }
+  )
 }
 
 # save data --------------------------------------------------------------------
