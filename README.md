@@ -2,4 +2,4 @@
 
 Scrape & Analyse the TrainDelays of OEBB
 
-![grafik](https://github.com/soeren-schwabbauer/TrainDelays_OEBB/assets/96189248/37af733a-53d3-4b00-bcb7-86665020933b)
+![delays](https://github.com/soeren-schwabbauer/TrainDelays_OEBB/assets/96189248/f564b3a7-9b05-444d-ad78-bbc79594685b)
