@@ -12,6 +12,7 @@ library(magrittr)
 library(tidyr)
 library(chron)
 library(lubridate)
+library(stringr)
 
 library(dplyr)
 
@@ -20,7 +21,7 @@ INPUT  <- "G:/My Drive/R_data/TrainDelays_OEBB/01_preprocess_delays/INPUT/"
 OUTPUT <- "G:/My Drive/R_data/TrainDelays_OEBB/01_preprocess_delays/TEMP/"
 
 
-# find dates which are not edited
+# find dates which are not edited ----------------------------------------------
 dates_raw    <- list.files(path = INPUT,  pattern = "^raw_delays") %>%
   gsub("raw_delays_", "", .) %>% 
   gsub(".RData", "", .)
@@ -30,6 +31,7 @@ dates_edited <- list.files(path = OUTPUT, pattern = "^delays") %>%
   gsub(".rda", "", .)
 
 dates <- dates_raw[!dates_raw %in% dates_edited]
+
 
 # edit & create variables ------------------------------------------------------
 
@@ -53,7 +55,8 @@ for(date in dates){
     separate(arrival, into = c("time_arrival", "delay"), sep = " ") %>%
     mutate(time_arrival = hm(time_arrival),
            date_arrival = ymd(date_arrival),
-           hour_arrival = lubridate::hour(time_arrival)) %>%
+           hour_arrival = hour(time_arrival),
+           wday_arrival = wday(date_arrival, week_start = 1)) %>%
     
     # delay as number  
     mutate(delay = gsub("\\(|\\)", "", delay),
@@ -74,8 +77,10 @@ for(date in dates){
            date_origdeparture = case_when(time_origdeparture > time_arrival ~ date_arrival - 1,
                                           .default = date_arrival)) %>%
     
-    mutate(station = stringr::str_replace(station, "St. ", "St."),
-           station_origdeparture = stringr::str_replace(station_origdeparture, "St. ", "St.")) %>%
+    # unify variables
+    mutate_at(vars(station, station_origdeparture), 
+              ~str_replace_all(., c("St. " = "St."))) %>%
+    
     # time traveled
     mutate(time_travelled = case_when(time_arrival > time_origdeparture ~ as.double(time_arrival - time_origdeparture, units = "mins"),
                                       time_arrival < time_origdeparture ~ as.double(time_arrival - time_origdeparture, units = "mins") + 60 *24)) %>%

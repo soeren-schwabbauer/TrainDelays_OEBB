@@ -7,14 +7,6 @@
 # Data Source: https://public.opendatasoft.com/explore/?sort=modified
 ################################################################################
 
-# load libraries
-library(sf)
-library(ggplot2)
-library(stringr)
-library(magrittr)
-
-library(dplyr)
-
 
 shapefile_austria <- st_read(paste0(INPUT, "/world-administrative-boundaries/world-administrative-boundaries.shp")) %>%
   

@@ -7,13 +7,6 @@
 # Data Source: https://data.oebb.at/de/datensaetze~geo-netz~
 ################################################################################
 
-# load libraries
-library(sf)
-library(ggplot2)
-library(stringr)
-library(magrittr)
-
-library(dplyr)
 
 # Define Input, OUTPUT
 INPUT  <- "G:/My Drive/R_data/TrainDelays_OEBB/02_additional_data/INPUT/"
@@ -53,13 +46,18 @@ shapefile_stations <- st_read(paste0(INPUT, "OEBB_GeoNetz_12-2023_SHP/RailwayJun
 
 
 # check, which stations are in the delays df -----------------------------------
-#PATH_DELAYS <- "G:/My Drive/R_data/TrainDelays_OEBB/01_preprocess_delays/OUTPUT/"
-#delays <- readRDS(paste0(PATH_DELAYS, "delays.rds"))
 
-#sf_stations <- shapefile_stations %>% pull(station)
-#wrongstationname <- delays %>% mutate(wrongstationname = case_when(station %in% sf_stations ~ 0, .default = 1)) %>% 
-#  filter(wrongstationname == 1) %>%
-#  distinct(station)
+if (FALSE) {
+  PATH_DELAYS <- "G:/My Drive/R_data/TrainDelays_OEBB/01_preprocess_delays/OUTPUT/"
+  delays <- readRDS(paste0(PATH_DELAYS, "delays.rds"))
+  
+  sf_stations <- shapefile_stations %>% pull(station)
+  wrongstationname <- delays %>%
+    mutate(wrongstationname = case_when(station %in% sf_stations ~ 0, TRUE ~ 1)) %>%
+    filter(wrongstationname == 1) %>%
+    distinct(station)
+  
+  wrongstationname
+}
 
-#wrongstationname
 # no more missing (every station can be matched) 
