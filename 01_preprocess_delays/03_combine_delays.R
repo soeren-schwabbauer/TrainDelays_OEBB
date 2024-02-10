@@ -40,14 +40,10 @@ delays %<>% mutate(orig_abroad = case_when(station_origdeparture %in% inland ~ 0
 
 
 # Manual replacements
-delays %<>% mutate(station = case_when(station == "LinzHbf" ~ "Linz Hbf",
-                                       station == "Graz-Liebenau Murpark" ~ "Graz Liebenau Murpark",
-                                        .default = station)) %>%
-            
-            mutate(station_origdeparture = case_when(station_origdeparture == "LinzHbf" ~ "Linz Hbf",
-                                                     station_origdeparture == "Graz-Liebenau Murpark" ~ "Graz Liebenau Murpark",
-                                                     .default = station_origdeparture)) 
-
+delays %<>% mutate_at(vars(station, station_origdeparture),
+                      ~case_when(. == "LinzHbf" ~ "Linz Hbf",
+                                 . == "Graz-Liebenau Murpark" ~ "Graz Liebenau Murpark",
+                                 TRUE ~ as.character(.)))
 # Filter Out ICB
 delays %<>% filter(!grepl("ICB", train_id))
 
