@@ -8,6 +8,7 @@
 
 # load libraries
 library(dplyr)
+library(magrittr)
 
 # define INPUT, OUTPUT, TEMP
 INPUT  <- "G:/My Drive/R_data/TrainDelays_OEBB/01_preprocess_delays/TEMP/"
@@ -38,8 +39,25 @@ delays %<>% mutate(orig_abroad = case_when(station_origdeparture %in% inland ~ 0
                                           .default = 1))
 
 
+# Manual replacements
+delays %<>% mutate(station = case_when(station == "LinzHbf" ~ "Linz Hbf",
+                                       station == "Graz-Liebenau Murpark" ~ "Graz Liebenau Murpark",
+                                        .default = station)) %>%
+            
+            mutate(station_origdeparture = case_when(station_origdeparture == "LinzHbf" ~ "Linz Hbf",
+                                                     station_origdeparture == "Graz-Liebenau Murpark" ~ "Graz Liebenau Murpark",
+                                                     .default = station_origdeparture)) 
 
+# Filter Out ICB
+delays %<>% filter(!grepl("ICB", train_id))
+
+# Filter out doubled rows
+delays %<>% filter(station != "St.Michael")
+delays %<>% filter(station != "Graz Don Bosco (Bahnsteige 1-2)")
+
+# Not in GER
+delays %<>% filter(station != "Traunstein")
 
 # save data in single df
-save(delays, file = paste0(OUTPUT, "delays.rda"))
+saveRDS(delays, file = paste0(OUTPUT, "delays.rds"))
 

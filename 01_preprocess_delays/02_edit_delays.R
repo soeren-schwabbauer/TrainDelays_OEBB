@@ -74,7 +74,8 @@ for(date in dates){
            date_origdeparture = case_when(time_origdeparture > time_arrival ~ date_arrival - 1,
                                           .default = date_arrival)) %>%
     
-    
+    mutate(station = stringr::str_replace(station, "St. ", "St."),
+           station_origdeparture = stringr::str_replace(station_origdeparture, "St. ", "St.")) %>%
     # time traveled
     mutate(time_travelled = case_when(time_arrival > time_origdeparture ~ as.double(time_arrival - time_origdeparture, units = "mins"),
                                       time_arrival < time_origdeparture ~ as.double(time_arrival - time_origdeparture, units = "mins") + 60 *24)) %>%
